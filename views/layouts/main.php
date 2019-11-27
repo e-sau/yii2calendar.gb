@@ -13,8 +13,8 @@ use app\assets\AppAsset;
 AppAsset::register($this);
 
 // Сохраним предыдущую страницу
-$prevPage = '<h3>Предыдущая страница: ' . Yii::$app->session->get('prevPage') . '</h3>';
-Yii::$app->session->set('prevPage', $_SERVER['REQUEST_URI']);
+//$prevPage = '<p class="col-xs-push-0">Предыдущая страница: ' . Yii::$app->session->get('prevPage') . '</p>';
+//Yii::$app->session->set('prevPage', $_SERVER['REQUEST_URI']);
 // ---------------------
 ?>
 <?php $this->beginPage() ?>
@@ -64,9 +64,6 @@ Yii::$app->session->set('prevPage', $_SERVER['REQUEST_URI']);
     ?>
 
     <div class="container">
-        <!-- Выводим предыдущую страницу -->
-        <?= $prevPage ?>
-        <!-- -/-/-/- -->
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
@@ -78,8 +75,9 @@ Yii::$app->session->set('prevPage', $_SERVER['REQUEST_URI']);
 <footer class="footer">
     <div class="container">
         <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
-
         <p class="pull-right"><?= Yii::powered() ?></p>
+        <!-- Выводим предыдущую страницу -->
+        <?= Yii::$app->lastVisitedPage->show(); ?>
     </div>
 </footer>
 
