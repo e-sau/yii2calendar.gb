@@ -11,6 +11,11 @@ use yii\widgets\Breadcrumbs;
 use app\assets\AppAsset;
 
 AppAsset::register($this);
+
+// Сохраним предыдущую страницу
+$prevPage = '<h3>Предыдущая страница: ' . Yii::$app->session->get('prevPage') . '</h3>';
+Yii::$app->session->set('prevPage', $_SERVER['REQUEST_URI']);
+// ---------------------
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -59,6 +64,9 @@ AppAsset::register($this);
     ?>
 
     <div class="container">
+        <!-- Выводим предыдущую страницу -->
+        <?= $prevPage ?>
+        <!-- -/-/-/- -->
         <?= Breadcrumbs::widget([
             'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
         ]) ?>
