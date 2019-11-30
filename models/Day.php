@@ -14,6 +14,12 @@ use yii\base\Model;
 class Day extends Model
 {
     /**
+     * id дня
+     *
+     * @var integer
+     */
+    public $id;
+    /**
      * Название дня
      *
      * @var string
