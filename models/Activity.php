@@ -18,6 +18,12 @@ use yii\base\Model;
 class Activity extends Model
 {
     /**
+     * id события
+     *
+     * @var integer
+     */
+    public $id;
+    /**
      * Название события
      *
      * @var string
