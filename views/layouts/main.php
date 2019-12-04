@@ -12,10 +12,6 @@ use app\assets\AppAsset;
 
 AppAsset::register($this);
 
-// Сохраним предыдущую страницу
-//$prevPage = '<p class="col-xs-push-0">Предыдущая страница: ' . Yii::$app->session->get('prevPage') . '</p>';
-//Yii::$app->session->set('prevPage', $_SERVER['REQUEST_URI']);
-// ---------------------
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -46,6 +42,7 @@ AppAsset::register($this);
             ['label' => 'Home', 'url' => ['/site/index']],
             ['label' => 'About', 'url' => ['/site/about']],
             ['label' => 'Contact', 'url' => ['/site/contact']],
+            ['label' => 'Signup', 'url' => ['/site/signup']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (
