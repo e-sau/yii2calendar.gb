@@ -21,13 +21,18 @@ class SiteController extends Controller
         return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['logout'],
+                'only' => ['logout', 'admin'],
                 'rules' => [
                     [
                         'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
+                    [
+                        'actions' => ['admin'],
+                        'allow' => true,
+                        'roles' => ['admin']
+                    ]
                 ],
             ],
             'verbs' => [
@@ -144,5 +149,24 @@ class SiteController extends Controller
         return $this->render('signup', [
             'model' => $model
         ]);
+    }
+
+//    /**
+//     * @param $username
+//     * @throws \Exception
+//     */
+//    public function actionSetAdminRoleToUser($username)
+//    {
+//        $model = User::findByUsername($username);
+//        if (!Yii::$app->user->can('admin')) {
+//            $adminRole = Yii::$app->authManager->getRole('admin');
+//            Yii::$app->authManager->assign($adminRole, $model->getId());
+//        }
+//    }
+
+    public function actionAdmin()
+    {
+        echo "Hello, Admin";
+        die();
     }
 }

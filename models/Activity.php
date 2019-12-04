@@ -1,87 +1,88 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Masya
- * Date: 24.11.2019
- * Time: 22:37
- */
 
 namespace app\models;
 
-
-use yii\base\Model;
+use yii\behaviors\TimestampBehavior;
 
 /**
- * Class Activity
- * Сущность события календаря
+ * This is the model class for table "activity".
+ *
+ * @property int $id
+ * @property string $title
+ * @property int $started_at
+ * @property int $finished_at
+ * @property int $user_id
+ * @property string|null $body
+ * @property int|null $repeat
+ * @property int|null $main
+ * @property int $created_at
+ * @property int $updated_at
+ *
+ * @property User $user
  */
-class Activity extends Model
+class Activity extends \yii\db\ActiveRecord
 {
     /**
-     * id события
-     *
-     * @var integer
+     * {@inheritdoc}
      */
-    public $id;
-    /**
-     * Название события
-     *
-     * @var string
-     */
-    public $title;
+    public static function tableName()
+    {
+        return 'activity';
+    }
 
     /**
-     * День начала события. Хранится в Unix timestamp
-     *
-     * @var int
+     * {@inheritdoc}
      */
-    public $startDay;
-
-    /**
-     * День завершения события. Хранится в Unix timestamp
-     *
-     * @var int
-     */
-    public $endDay;
-
-    /**
-     * ID автора, создавшего события
-     *
-     * @var int
-     */
-    public $idAuthor;
-
-    /**
-     * Описание события
-     *
-     * @var string
-     */
-    public $body;
-
-    /**
-     * Повтор события
-     *
-     * @var string | array
-     */
-    public $repeat;
-
-    /**
-     * Основное событие (блокирующее)
-     * - не позволяет создать другое событие в этот день
-     *
-     * @return boolean
-     */
-    public $main;
-
-    public function attributeLabels()
+    public function rules()
     {
         return [
-          'title' => 'Название события',
-          'startDay' => 'Дата начала',
-          'endDay' => 'Дата завершения',
-          'idAuthor' => 'ID автора',
-          'body' => 'Описание события'
+            [['title', 'started_at', 'user_id'], 'required'],
+            [['user_id', 'repeat', 'main'], 'integer'],
+            [['started_at', 'finished_at'], 'date'],
+            [['body'], 'string'],
+            [['title'], 'string', 'max' => 255],
+            [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
+            [['started_at'], 'filter', 'filter' => function($value) {
+                return strtotime($value);
+            }],
+            ['finished_at', 'default', 'value' => function($model, $attribute) {
+                return $model->started_at;
+            }],
+            ['finished_at', 'compare', 'compareAttribute' => 'started_at', 'operator' => '>=', 'type' => 'number']
         ];
     }
 
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+          TimestampBehavior::class
+        ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id' => 'ID',
+            'title' => 'Title',
+            'started_at' => 'Started At',
+            'finished_at' => 'Finished At',
+            'body' => 'Body',
+            'repeat' => 'Repeat',
+            'main' => 'Main',
+        ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUser()
+    {
+        return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
 }

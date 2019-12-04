@@ -50,6 +50,14 @@ $config = [
             'rules' => [
             ],
         ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager'
+        ],
+        'formatter' => [
+              'dateFormat'     => 'php:d.m.Y',
+              'datetimeFormat' => 'php:d.m.Y H:i:s',
+              'timeFormat'     => 'php:H:i:s',
+        ],
 
         'lastVisitedPage' => [
             'class' => 'app\components\LastVisitedPageComponent',
