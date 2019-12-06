@@ -26,14 +26,23 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
             'title',
             'started_at:date',
             'finished_at:date',
 //            'user_id',
             'body:ntext',
-            'repeat',
-            'main',
+            [
+                'attribute' => 'repeat',
+                'value' => function ($model) {
+                    return $model->repeat ? 'Да' : 'Нет';
+                }
+            ],
+            [
+                'attribute' => 'main',
+                'value' => function ($model) {
+                    return $model->main ? 'Да' : 'Нет';
+                }
+            ],
             'created_at:datetime',
             'updated_at:datetime',
 
