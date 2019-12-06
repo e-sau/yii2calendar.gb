@@ -12,10 +12,6 @@ use app\assets\AppAsset;
 
 AppAsset::register($this);
 
-// Сохраним предыдущую страницу
-//$prevPage = '<p class="col-xs-push-0">Предыдущая страница: ' . Yii::$app->session->get('prevPage') . '</p>';
-//Yii::$app->session->set('prevPage', $_SERVER['REQUEST_URI']);
-// ---------------------
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -40,25 +36,32 @@ AppAsset::register($this);
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
+
+    $menuItems = [
+        ['label' => 'Home', 'url' => ['/site/index']],
+        ['label' => 'About', 'url' => ['/site/about']],
+        ['label' => 'Contact', 'url' => ['/site/contact']],
+    ];
+    if (Yii::$app->user->isGuest) {
+        array_push($menuItems,
+            ['label' => 'Signup', 'url' => ['/site/signup']],
+            ['label' => 'Login', 'url' => ['/site/login']]
+        );
+    } else {
+        $menuItems[] =
+        '<li>'
+        . Html::beginForm(['/site/logout'], 'post')
+        . Html::submitButton(
+          'Logout (' . Yii::$app->user->identity->username . ')',
+          ['class' => 'btn btn-link logout']
+        )
+        . Html::endForm()
+        . '</li>';
+    }
+
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
-        'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
-            Yii::$app->user->isGuest ? (
-                ['label' => 'Login', 'url' => ['/site/login']]
-            ) : (
-                '<li>'
-                . Html::beginForm(['/site/logout'], 'post')
-                . Html::submitButton(
-                    'Logout (' . Yii::$app->user->identity->username . ')',
-                    ['class' => 'btn btn-link logout']
-                )
-                . Html::endForm()
-                . '</li>'
-            )
-        ],
+        'items' => $menuItems,
     ]);
     NavBar::end();
     ?>
