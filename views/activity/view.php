@@ -31,14 +31,24 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'title',
-            'started_at',
-            'finished_at',
+            'started_at:date',
+            'finished_at:date',
             'user_id',
             'body:ntext',
-            'repeat',
-            'main',
-            'created_at',
-            'updated_at',
+            [
+                'attribute' => 'repeat',
+                'value' => function ($model) {
+                    return $model->repeat ? 'Да' : 'Нет';
+                }
+            ],
+            [
+                'attribute' => 'main',
+                'value' => function ($model) {
+                    return $model->main ? 'Да' : 'Нет';
+                }
+            ],
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]) ?>
 

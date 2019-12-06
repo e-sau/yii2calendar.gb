@@ -40,9 +40,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'body')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'repeat')->textInput() ?>
+    <?= $form->field($model, 'repeat')->checkbox() ?>
 
-    <?= $form->field($model, 'main')->textInput() ?>
+    <?= $form->field($model, 'main')->checkbox() ?>
 
     <?php // echo $form->field($model, 'created_at')->textInput() ?>
 

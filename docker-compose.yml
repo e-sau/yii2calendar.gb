@@ -6,7 +6,7 @@ services:
       context: ./
       dockerfile: ./docker/Dockerfile
     environment:
-      XDEBUG_CONFIG: remote_host=host.docker.internal
+      XDEBUG_CONFIG: remote_host=192.168.1.224
       PHP_IDE_CONFIG: serverName=localhost
     ports:
       - 81:80
