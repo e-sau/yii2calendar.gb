@@ -49,6 +49,11 @@ class ActivityController extends Controller
     public function actionIndex()
     {
         $searchModel = new ActivitySearch();
+
+        if (!Yii::$app->user->can('admin')) {
+            $searchModel->user_id = Yii::$app->user->id;
+        }
+
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [

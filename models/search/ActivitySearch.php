@@ -11,6 +11,8 @@ use app\models\Activity;
  */
 class ActivitySearch extends Activity
 {
+    public $author;
+
     /**
      * {@inheritdoc}
      */
@@ -19,6 +21,7 @@ class ActivitySearch extends Activity
         return [
             [['id', 'started_at', 'finished_at', 'user_id', 'repeat', 'main', 'created_at', 'updated_at'], 'integer'],
             [['title', 'body'], 'safe'],
+            [['author'], 'string']
         ];
     }
 
@@ -54,6 +57,11 @@ class ActivitySearch extends Activity
             // uncomment the following line if you do not want to return any records when validation fails
             // $query->where('0=1');
             return $dataProvider;
+        }
+
+        if (!empty($this->author)) {
+            $query->joinWith('user');
+            $query->andWhere(['like', 'user.username', $this->author]);
         }
 
         // grid filtering conditions

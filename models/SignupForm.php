@@ -38,8 +38,16 @@ class SignupForm extends Model
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
-        $user->setPasswordHash($this->password);
+        $user->trigger(User::EVENT_GENERATE_PASSWORD);
+        $user->setPasswordHash($user->password);
         $user->generateAuthKey();
-        return $user->save() ? $user : null;
+
+        $result = $user->save();
+
+        if ($result) {
+            $user->trigger(User::EVENT_SEND_EMAIL);
+        }
+
+        return $result ? $user : null;
     }
 }

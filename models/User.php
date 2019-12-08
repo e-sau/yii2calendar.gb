@@ -23,6 +23,19 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
 
+    const EVENT_GENERATE_PASSWORD = 'generatePassword';
+    const EVENT_SEND_EMAIL = 'sendEmail';
+
+    public $password;
+
+    public function init()
+    {
+        $this->on(self::EVENT_GENERATE_PASSWORD, [$this, 'generateRandomPassword']);
+        $this->on(self::EVENT_SEND_EMAIL, [$this, 'sendEmail']);
+
+        parent::init();
+    }
+
     /**
      * @inheritdoc
      */
@@ -131,5 +144,33 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     public function generateAuthKey()
     {
         $this->auth_key = \Yii::$app->security->generateRandomString();
+    }
+
+    /**
+     * Generates random password
+     *
+     * @throws \yii\base\Exception
+     */
+    public function generateRandomPassword($event)
+    {
+        $this->password = \Yii::$app->security->generateRandomString(8);
+    }
+
+    /**
+     * Send email to new user
+     *
+     * @param $event
+     */
+    public function sendEmail($event)
+    {
+        $body  = "<p>Login - {$this->username}</p>";
+        $body .= "<p>Password - {$this->password}</p>";
+
+        \Yii::$app->mailer->compose()
+            ->setFrom('yii2calendar@domain.com')
+            ->setTo($this->email)
+            ->setSubject('User register data')
+            ->setHtmlBody($body)
+            ->send();
     }
 }
