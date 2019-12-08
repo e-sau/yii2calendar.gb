@@ -26,15 +26,20 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+//            'id',
             'username',
-            'password_hash',
-            'auth_key',
-            'password_reset_token',
-            //'email:email',
-            //'created_at',
-            //'updated_at',
-            //'status',
+//            'password_hash',
+//            'auth_key',
+//            'password_reset_token',
+            'email:email',
+            [
+                'attribute' => 'status',
+                'value' => function ($model) {
+                    return $model->status === 10 ? 'Active' : 'Deleted';
+                }
+            ],
+            'created_at:datetime',
+            'updated_at:datetime',
 
             ['class' => 'yii\grid\ActionColumn'],
         ],

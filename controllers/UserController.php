@@ -6,6 +6,7 @@ use app\models\SignupForm;
 use Yii;
 use app\models\User;
 use app\models\search\UserSearch;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -27,6 +28,15 @@ class UserController extends Controller
                     'delete' => ['POST'],
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['admin']
+                    ]
+                ],
+            ]
         ];
     }
 
@@ -66,14 +76,10 @@ class UserController extends Controller
      */
     public function actionCreate()
     {
-        $model = new User();
+        $model = new SignupForm();
 
-        if ($model->load(Yii::$app->request->post())) {
-            $model->setPasswordHash($this->password);
-            $model->generateAuthKey();
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
+        if ($model->load(Yii::$app->request->post()) && $user = $model->signup()) {
+            return $this->redirect(['view', 'id' => $user->id]);
         }
 
         return $this->render('create', [

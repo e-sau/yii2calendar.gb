@@ -40,7 +40,6 @@ class SignupForm extends Model
         $user->email = $this->email;
         $user->setPasswordHash($this->password);
         $user->generateAuthKey();
-        $user->save();
         return $user->save() ? $user : null;
     }
 }

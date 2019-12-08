@@ -14,7 +14,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'username')->textInput(['autofocus' => true]) ?>
     <?= $form->field($model, 'email') ?>
-    <?php echo $form->field($model, 'password')->passwordInput() ?>
+    <?php //$form->field($model, 'password')->passwordInput() ?>
+    <?= $form->field($model, 'status')->textInput()->label('Статус (0 - удален, 10 - активен') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

@@ -6,7 +6,7 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\models\User */
 
-$this->title = $model->id;
+$this->title = $model->username;
 $this->params['breadcrumbs'][] = ['label' => 'Users', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -31,13 +31,18 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'username',
-            'password_hash',
-            'auth_key',
-            'password_reset_token',
+//            'password_hash',
+//            'auth_key',
+//            'password_reset_token',
             'email:email',
-            'created_at',
-            'updated_at',
-            'status',
+            [
+                'attribute' => 'status',
+                'value' => function ($model) {
+                    return $model->status === 10 ? 'Active' : 'Deleted';
+                }
+            ],
+            'created_at:datetime',
+            'updated_at:datetime',
         ],
     ]) ?>
 
