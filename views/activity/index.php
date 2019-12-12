@@ -29,7 +29,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'title',
             'started_at:date',
             'finished_at:date',
-//            'user_id',
+            [
+                'attribute' => 'author',
+                'label' => 'Author',
+                'value' => function (\app\models\Activity $model) {
+                    return $model->user->username;
+                }
+            ],
             'body:ntext',
             [
                 'attribute' => 'repeat',
