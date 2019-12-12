@@ -30,14 +30,32 @@ class UserController extends Controller
             ],
             'access' => [
                 'class' => AccessControl::class,
+                'only' => ['account', 'index'],
                 'rules' => [
                     [
+                        'actions' => ['index'],
                         'allow' => true,
                         'roles' => ['admin']
+                    ],
+                    [
+                        'actions' => ['account'],
+                        'allow' => true,
+                        'roles' => ['@']
                     ]
                 ],
             ]
         ];
+    }
+
+    /**
+     * @return string
+     * @throws NotFoundHttpException
+     */
+    public function actionAccount()
+    {
+        return $this->render('account', [
+            'model' => $this->findModel(Yii::$app->user->id),
+        ]);
     }
 
     /**

@@ -42,7 +42,7 @@ class Activity extends \yii\db\ActiveRecord
             [['body'], 'string'],
             [['title'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
-            [['started_at'], 'filter', 'filter' => function($value) {
+            [['started_at', 'finished_at'], 'filter', 'filter' => function($value) {
                 return strtotime($value);
             }],
             ['finished_at', 'default', 'value' => function($model, $attribute) {
