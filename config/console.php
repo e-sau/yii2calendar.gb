@@ -15,7 +15,22 @@ $config = [
     ],
     'components' => [
         'cache' => [
-            'class' => 'yii\caching\FileCache',
+            'class' => \yii\caching\MemCache::class,
+            'useMemcached' => true,
+            'servers' => [
+                [
+                    'host' => 'memcached',
+                    'port' => 11211,
+                    'persistent' => false,
+                ],
+            ],
+        ],
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            // send all mails to a file by default. You have to set
+            // 'useFileTransport' to false and configure a transport
+            // for the mailer to send real emails.
+            'useFileTransport' => true,
         ],
         'log' => [
             'targets' => [

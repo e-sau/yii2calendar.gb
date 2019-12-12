@@ -31,3 +31,10 @@ services:
       MYSQL_PASSWORD: mysqluser
     volumes:
       - /yii2calendar.gb/docker/database:/var/lib/mysql
+
+  memcached:
+    container_name: memcached_gb
+    image: sameersbn/memcached:1.5.6
+    ports:
+      - 11212:11211
+    restart: always
