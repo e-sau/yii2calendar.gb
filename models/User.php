@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\behaviors\ARCacheBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 
@@ -50,7 +51,8 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     public function behaviors()
     {
         return [
-            TimestampBehavior::class
+            TimestampBehavior::class,
+            ARCacheBehavior::class
         ];
     }
 
@@ -172,5 +174,18 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
             ->setSubject('User register data')
             ->setHtmlBody($body)
             ->send();
+    }
+
+    public static function findOne($condition)
+    {
+        $key = is_array($condition) ? serialize($condition) : $condition;
+
+        if (\Yii::$app->cache->exists(self::class . "_" . $key)) {
+            return \Yii::$app->cache->get(self::class . "_" . $key);
+        } else {
+            $result = parent::findOne($condition);
+            \Yii::$app->cache->set(self::class . "_" . $key, $result);
+            return $result;
+        }
     }
 }
