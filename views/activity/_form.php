@@ -17,17 +17,19 @@ use yii\widgets\ActiveForm;
     <?= $form->field($model, 'started_at')->widget(\kartik\date\DatePicker::class, [
         'options' => [
             'placeholder' => 'Выберите дату начала события',
+            'value' => $model->started_at ? date('d.m.Y', $model->started_at) : null,
         ],
         'pluginOptions' => [
             'format' => 'dd.mm.yyyy',
             'autoclose' => true,
             'todayHighlight' => true,
-        ]
+        ],
     ]) ?>
 
     <?= $form->field($model, 'finished_at')->widget(\kartik\date\DatePicker::class, [
       'options' => [
         'placeholder' => 'Выберите дату окончания события',
+          'value' => $model->started_at ? date('d.m.Y', $model->finished_at) : null,
       ],
       'pluginOptions' => [
         'format' => 'dd.mm.yyyy',

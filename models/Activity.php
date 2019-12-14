@@ -60,7 +60,7 @@ class Activity extends \yii\db\ActiveRecord
     {
         return [
             TimestampBehavior::class,
-            ARCacheBehavior::class
+            ARCacheBehavior::class,
         ];
     }
 
