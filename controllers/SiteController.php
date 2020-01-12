@@ -2,10 +2,12 @@
 
 namespace app\controllers;
 
+use app\models\Activity;
 use app\models\SignupForm;
-use app\models\User;
+use edofre\fullcalendar\models\Event;
 use Yii;
 use yii\filters\AccessControl;
+use yii\helpers\Url;
 use yii\web\Controller;
 use yii\web\Response;
 use yii\filters\VerbFilter;
@@ -169,5 +171,10 @@ class SiteController extends Controller
     {
         echo "Hello, Admin";
         die();
+    }
+
+    public function actionCalendar()
+    {
+        return $this->render('calendar');
     }
 }

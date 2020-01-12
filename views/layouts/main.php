@@ -48,8 +48,8 @@ AppAsset::register($this);
             ['label' => 'Login', 'url' => ['/site/login']]
         );
     } else {
-        $label = Yii::$app->user->can('admin') ? 'Все активности' : 'Мои активности';
-        $menuItems[] = ['label' => $label, 'url' => ['/activity']];
+        $menuItems[] = ['label' => 'Календарь', 'url' => ['/site/calendar']];
+        $menuItems[] = ['label' => 'Личный кабинет', 'url' => ['/user/account']];
         $menuItems[] =
         '<li>'
         . Html::beginForm(['/site/logout'], 'post')

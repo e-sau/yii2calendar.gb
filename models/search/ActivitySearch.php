@@ -3,6 +3,7 @@
 namespace app\models\search;
 
 use yii\base\Model;
+use yii\caching\DbDependency;
 use yii\data\ActiveDataProvider;
 use app\models\Activity;
 
@@ -40,6 +41,7 @@ class ActivitySearch extends Activity
      * @param array $params
      *
      * @return ActiveDataProvider
+     * @throws \Throwable
      */
     public function search($params)
     {
@@ -78,6 +80,21 @@ class ActivitySearch extends Activity
 
         $query->andFilterWhere(['like', 'title', $this->title])
             ->andFilterWhere(['like', 'body', $this->body]);
+
+        $query->andWhere([
+            'or',
+            ['between', 'finished_at', strtotime($params['start']), strtotime($params['end'])],
+            ['between', 'started_at', strtotime($params['start']), strtotime($params['end'])]
+        ]);
+
+        $dependency = new DbDependency([
+            'sql' => 'SELECT MAX(updated_at) FROM `activity`',
+            'reusable' => true
+        ]);
+
+        \Yii::$app->db->cache(function() use ($dataProvider) {
+            $dataProvider->prepare();
+        }, 60, $dependency);
 
         return $dataProvider;
     }

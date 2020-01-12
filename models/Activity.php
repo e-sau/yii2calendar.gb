@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\components\behaviors\ARCacheBehavior;
 use yii\behaviors\TimestampBehavior;
 
 /**
@@ -42,11 +43,11 @@ class Activity extends \yii\db\ActiveRecord
             [['body'], 'string'],
             [['title'], 'string', 'max' => 255],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::class, 'targetAttribute' => ['user_id' => 'id']],
-            [['started_at'], 'filter', 'filter' => function($value) {
-                return strtotime($value);
-            }],
             ['finished_at', 'default', 'value' => function($model, $attribute) {
                 return $model->started_at;
+            }],
+            [['started_at', 'finished_at'], 'filter', 'filter' => function($value) {
+                return strtotime($value);
             }],
             ['finished_at', 'compare', 'compareAttribute' => 'started_at', 'operator' => '>=', 'type' => 'number']
         ];
@@ -58,7 +59,8 @@ class Activity extends \yii\db\ActiveRecord
     public function behaviors()
     {
         return [
-          TimestampBehavior::class
+            TimestampBehavior::class,
+            ARCacheBehavior::class,
         ];
     }
 
@@ -84,5 +86,31 @@ class Activity extends \yii\db\ActiveRecord
     public function getUser()
     {
         return $this->hasOne(User::class, ['id' => 'user_id']);
+    }
+
+    public static function findOne($condition)
+    {
+        $key = is_array($condition) ? serialize($condition) : $condition;
+
+        if (\Yii::$app->cache->exists(self::class . "_" . $key)) {
+            return \Yii::$app->cache->get(self::class . "_" . $key);
+        } else {
+            $result = parent::findOne($condition);
+            \Yii::$app->cache->set(self::class . "_" . $key, $result);
+            return $result;
+        }
+    }
+
+    public static function findAll($condition)
+    {
+        $key = is_array($condition) ? serialize($condition) : $condition;
+
+        if (\Yii::$app->cache->exists(self::class . "_" . $key)) {
+            return \Yii::$app->cache->get(self::class . "_" . $key);
+        } else {
+            $result = parent::findAll($condition);
+            \Yii::$app->cache->set(self::class . "_" . $key, $result);
+            return $result;
+        }
     }
 }
